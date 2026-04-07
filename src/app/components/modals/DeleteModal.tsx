@@ -13,7 +13,7 @@ export default function DeleteModal({ onCancel, onConfirm }: DeleteModalProps) {
             <div className="absolute inset-0 bg-black/40" onClick={onCancel}>
                 <div className="relative z-10 w-full max-w-[320px] rounded-3xl bg-white p-6 flex flex-col items-center text-center shadow-xl">
                     <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
-                        <TriangleAlert size={28} classname="text-red-500" />
+                        <TriangleAlert size={28} className="text-red-500" />
                     </div>
 
                     <h2 className="mb-2 text-lg font-bold text-gray-900">
