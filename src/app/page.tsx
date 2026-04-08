@@ -94,7 +94,7 @@ export default function HomePage() {
           {TODAY_PICKS.map((item) => (
             <div
               key={item.id}
-              className="flex-shrink-0 w-[140px] flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden"
+              className="shrink-0 w-[140px] flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden"
             >
               <div className="relative h-32 w-full bg-white flex items-center justify-center">
                 <Image

@@ -1,41 +1,43 @@
 import { MenuItem, Notification } from "@/types";
 
 // ============================================================
-// UNSPLASH IMAGES
+// my images
 // ============================================================
 
 const COFFEE_IMAGES = [
-  "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",
-  "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80",
-  "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80",
-  "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=400&q=80",
-  "https://images.unsplash.com/photo-1534040385115-33dcb3acba5b?w=400&q=80",
-  "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",
+  "/images/menuImages/putih.png",
+  "/images/menuImages/kuning.png",
+  "/images/menuImages/merah.png",
+  "/images/menuImages/biru.png",
+  "/images/menuImages/kuning.png",
 ];
 
 const NON_COFFEE_IMAGES = [
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
-  "https://images.unsplash.com/photo-1546173159-315724a31696?w=400&q=80",
-  "https://images.unsplash.com/photo-1627478377806-4b6d0df8a8d3?w=400&q=80",
-  "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=80",
+  "/images/menuImages/putih.png",
+  "/images/menuImages/kuning.png",
+  "/images/menuImages/biru.png",
+  "/images/menuImages/merah.png",
+  "/images/menuImages/putih.png",
 ];
 
 const SNACK_IMAGES = [
-  "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=80",
-  "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
-  "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80",
-  "https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?w=400&q=80",
+  "/images/menuImages/putih.png",
+  "/images/menuImages/kuning.png",
+  "/images/menuImages/merah.png",
+  "/images/menuImages/biru.png",
+  "/images/menuImages/putih.png",
 ];
 
 const DESSERT_IMAGES = [
-  "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&q=80",
-  "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80",
-  "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80",
-  "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80",
+  "/images/menuImages/biru.png",
+  "/images/menuImages/biru.png",
+  "/images/menuImages/biru.png",
+  "/images/menuImages/biru.png",
+  "/images/menuImages/biru.png",
 ];
 
 export const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80";
+"/images/CarouselImages/carousel.png"
 
 // ============================================================
 // MENU ITEMS
@@ -94,17 +96,6 @@ export const MENU_ITEMS: MenuItem[] = [
     category: "coffee",
     rating: 4.9,
   },
-  {
-    id: "c6",
-    name: "Cold Brew",
-    description: "Diseduh dingin selama 12 jam, menghasilkan kopi smooth dengan keasaman rendah.",
-    price: 40000,
-    image: COFFEE_IMAGES[5],
-    category: "coffee",
-    rating: 4.8,
-    isSpecialOffer: true,
-  },
-
   // --- NON-COFFEE ---
   {
     id: "nc1",

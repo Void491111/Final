@@ -14,7 +14,7 @@ export default function ConfirmationModal({
     <div className="absolute inset-0 z-60 flex items-center justify-center px-6">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
 
-      <div className="relative z-10 rounded-[2rem] border-2 border-white bg-[#d2d2d2]/45 p-2">
+      <div className="relative z-10 rounded-4xl border-2 border-white bg-[#d2d2d2]/45 p-2">
         <div className="w-full max-w-[320px] rounded-3xl bg-white p-6 flex flex-col items-center text-center shadow-xl">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100">
             <Info size={28} className="text-blue-500" />
