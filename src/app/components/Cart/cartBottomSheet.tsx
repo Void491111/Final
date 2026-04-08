@@ -24,7 +24,7 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
   const [note, setNote] = useState(item.note);
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center">
+    <div className="fixed inset-0 z-60 flex items-end justify-center animate-fade-in">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative z-10 w-full max-w-[430px] rounded-t-3xl bg-white p-5 pb-8">
         <h3 className="mb-4 text-base font-bold text-gray-900">
@@ -65,7 +65,7 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
 
         <button
           onClick={() => { onSave(sweetness, note); onClose(); }}
-          className="w-full rounded-2xl bg-primary py-3 text-sm font-bold text-white active:scale-95 transition-transform"
+          className="w-full rounded-2xl bg-primary py-3 text-sm font-bold bg-[#1073BA] text-white active:scale-95 transition-transform"
         >
           Simpan
         </button>
@@ -256,7 +256,7 @@ export default function CartBottomSheet() {
 
             <button
               onClick={() => setShowConfirmation(true)}
-              className="w-full rounded-2xl bg-primary py-3.5 text-sm font-bold text-white active:scale-95 transition-transform shadow-md"
+              className="w-full rounded-2xl bg-primary py-3.5 bg-[#1073BA] text-sm font-bold text-white active:scale-95 transition-transform shadow-md"
             >
               Pesan Sekarang
             </button>
@@ -267,7 +267,7 @@ export default function CartBottomSheet() {
       {/* Confirmation Modal */}
       {showConfirmation && (
         <ConfirmationModal
-          onBack={() => setShowConfirmation(false)}
+          onCancel={() => setShowConfirmation(false)}
           onConfirm={() => {
             setShowConfirmation(false);
             alert("Order placed! (coming soon)");

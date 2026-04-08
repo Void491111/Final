@@ -31,7 +31,7 @@ export default function CartFAB() {
         Lihat Keranjang
       </span>
       <span className="text-sm font-bold text-primary">
-        {formatCurrency(total())}
+        {formatCurrency(total)}
       </span>
       <ShoppingCart size={18} className="text-white" />
     </button>

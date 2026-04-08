@@ -15,6 +15,7 @@ import {
 } from "@/lib/data/menuData";
 import { MenuCategory } from "@/types";
 import { formatCurrency } from "@/lib/utils";
+import InfoMejaModal from "./components/modals/InfoMejamodal";
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState<MenuCategory | "semua">(
@@ -27,12 +28,12 @@ export default function HomePage() {
       : MENU_ITEMS.filter((item) => item.category === activeCategory);
 
   return (
-    <div className="flex flex-col bg-white min-h-screen pb-32">
+    <div className="relative flex flex-col bg-white min-h-screen pb-32">
       {/* Navbar */}
       <Navbar />
 
       {/* Hero Banner */}
-      <div className="relative w-full aspect-[16/9] overflow-hidden">
+      <div className="relative w-full aspect-video overflow-hidden">
         <Image
           src={HERO_IMAGE}
           alt="De-Mooiste Cafe"
@@ -41,7 +42,7 @@ export default function HomePage() {
           priority
           sizes="430px"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-5">
+        <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent flex items-end p-5">
           <div>
             <p className="text-xs font-medium text-white/70 uppercase tracking-widest">
               Selamat datang di
@@ -56,7 +57,7 @@ export default function HomePage() {
       {/* Special Offers */}
       <section className="pt-8">
         <div className="flex items-center gap-6 overflow-x-auto no-scrollbar px-5 pb-4">
-          <h2 className="text-xl font-bold text-gray-900 flex-shrink-0">
+          <h2 className="text-xl font-bold text-gray-900 shrink-0">
             Special Offers
           </h2>
 
@@ -146,6 +147,7 @@ export default function HomePage() {
       {/* Cart */}
       <CartFAB />
       <CartBottomSheet />
+      <InfoMejaModal />
     </div>
   );
 }

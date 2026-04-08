@@ -2,13 +2,18 @@ import { MenuItem } from "@/types";
 import { useCartStore } from "@/store";
 
 export function useMenuItemCard(item: MenuItem) {
-    const addItem = useCartStore((s) => s.addItem);
-    const openCart = useCartStore((s) => s.openCart);
+  const addItem = useCartStore((s) => s.addItem);
+  const openCart = useCartStore((s) => s.openCart);
 
-    function handleQuickAdd() {
-        addItem(item, "normal-sweet", "", 1);
-        openCart();
-    }
+  function handleQuickAdd() {
+    const defaultSweetness =
+      (item.category === "coffee" || item.category === "non-coffee")
+        ? "normal-sweet"
+        : "none";
 
-    return { handleQuickAdd };
+    addItem(item, defaultSweetness, "", 1);
+    openCart();
+  }
+
+  return { handleQuickAdd };
 }

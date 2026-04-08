@@ -28,15 +28,18 @@ export type SweetnessLevel =
   | "normal-sweet"
   | "less-sweet"
   | "no-sugar"
-  | "extra-sweet";
+  | "extra-sweet"
+  | "none"; // <-- Ini dia surat izin buat TypeScript
 
 export const SWEETNESS_LABELS: Record<SweetnessLevel, string> = {
   "normal-sweet": "Normal Sweet",
   "less-sweet": "Less Sweet",
   "no-sugar": "No Sugar",
   "extra-sweet": "Extra Sweet",
+  "none": "-", // <-- Wajib ditambahin biar Record-nya nggak error
 };
 
+// Sengaja "none" gak dimasukkan ke sini biar gak muncul jadi tombol di UI
 export const SWEETNESS_OPTIONS: SweetnessLevel[] = [
   "normal-sweet",
   "less-sweet",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTableStore } from "@/store";
 
 const TABLE_NUMBER = "93";
@@ -13,6 +13,11 @@ export function useInfoMejaModal() {
     const [customerName, setCustomerName] = useState(
         tableInfo?.customerName ?? ""
     );
+
+    useEffect(() => {
+        document.body.style.overflow = isOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
+    }, [isOpen]);
 
     function handleSave() {
         setTableInfo({
