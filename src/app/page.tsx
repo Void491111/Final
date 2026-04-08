@@ -61,6 +61,7 @@ export default function HomePage() {
             Special Offers
           </h2>
 
+
           {SPECIAL_OFFERS.map((item) => (
             <div
               key={item.id}
@@ -83,6 +84,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <hr mx-5 border-mooiste/>
 
       {/* Today Picks */}
       <section className="px-4 pt-6">
@@ -124,6 +127,8 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <hr mx-5 border-mooiste/>
 
       {/* Our Menu */}
       <section className="px-4 pt-8">
