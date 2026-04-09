@@ -65,7 +65,7 @@ export default function HomePage() {
           {SPECIAL_OFFERS.map((item) => (
             <div
               key={item.id}
-              className="flex-shrink-0 flex items-center justify-center"
+              className="shrink-0 flex items-center justify-center"
             >
               <div className="relative h-20 w-16">
                 <Image
@@ -79,7 +79,7 @@ export default function HomePage() {
             </div>
           ))}
 
-          <div className="flex-shrink-0 flex items-center justify-center pl-2 pr-4">
+          <div className="shrink-0 flex items-center justify-center pl-2 pr-4">
             <span className="text-gray-800 text-lg font-medium">--&gt;</span>
           </div>
         </div>
@@ -88,45 +88,46 @@ export default function HomePage() {
       <hr className="mx-5 border-mooiste"/>
 
       {/* Today Picks */}
-      <section className="px-4 pt-6">
-        <h2 className="text-sm font-bold text-gray-900 text-center mb-5">
-          Today Picks
-        </h2>
+      {/* Today Picks */}
+<section className="px-4 pt-6">
+  <h2 className="text-sm font-bold text-gray-900 text-center mb-5">
+    Today Picks
+  </h2>
 
-        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
-          {TODAY_PICKS.map((item) => (
-            <div
-              key={item.id}
-              className="shrink-0 w-[140px] flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden"
-            >
-              <div className="relative h-32 w-full bg-white flex items-center justify-center">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-cover"
-                  sizes="140px"
-                />
-              </div>
-
-              <div className="p-3 flex flex-col gap-1 border-t border-gray-100">
-                <p className="text-sm font-bold text-gray-900 leading-tight">
-                  {item.name}
-                </p>
-                <p className="text-[10px] text-gray-500 line-clamp-2 leading-snug">
-                  {item.description}
-                </p>
-                <p className="text-[11px] font-medium text-gray-600 mt-1">
-                  mulai dari{" "}
-                  <span className="text-[#C17C3F] font-bold">
-                    {formatCurrency(item.price)}
-                  </span>
-                </p>
-              </div>
+      <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4">
+        {TODAY_PICKS.map((item) => (
+          <div
+            key={item.id}
+            className="shrink-0 w-[140px] flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden"
+          >
+            <div className="flex items-center justify-center pt-5 px-4 pb-2 bg-gray-50">
+              <Image
+                src={item.image}
+                alt={item.name}
+                width={80}
+                height={100}
+                className="object-contain drop-shadow-md"
+              />
             </div>
-          ))}
-        </div>
-      </section>
+
+            <div className="px-3 pb-3 pt-2">
+              <p className="text-xs font-bold text-gray-900 leading-tight">
+                {item.name}
+              </p>
+              <p className="text-[10px] text-gray-500 leading-snug line-clamp-2 mt-1">
+                {item.description}
+              </p>
+              <p className="text-[10px] text-gray-600 mt-1">
+                mulai dari{" "}
+                <span className="text-[#C17C3F] font-bold">
+                  {formatCurrency(item.price)}
+                </span>
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
 
       <hr className="mx-5 border-mooiste"/>
 
