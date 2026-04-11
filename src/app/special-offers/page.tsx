@@ -25,7 +25,6 @@ export default function SpecialOffersPage() {
 
   return (
     <div className="relative flex flex-col bg-white min-h-screen pb-32">
-      {/* Header */}
       <div className="flex items-center gap-3 px-5 py-4 border-b border-mooiste">
         <button
           onClick={() => router.back()}
@@ -36,7 +35,6 @@ export default function SpecialOffersPage() {
         <h1 className="text-base font-bold text-gray-900">Special Offers</h1>
       </div>
 
-      {/* Grid 2x2 */}
       <div className="grid grid-cols-2 gap-3 px-4 pt-5">
         {SPECIAL_OFFERS.map((item) => (
           <button
