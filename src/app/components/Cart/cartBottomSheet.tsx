@@ -4,11 +4,12 @@ import Image from "next/image";
 import { X, ShoppingCart, Minus, Plus, Trash2, Pencil } from "lucide-react";
 import { CartItem, SWEETNESS_LABELS, SWEETNESS_OPTIONS, SweetnessLevel } from "@/types";
 import { formatCurrency } from "@/lib/utils";
-import { UseCartBottomSheet } from "./useCartBottomSheet";
+import { UseCartBottomSheet, useCartScrollLock } from "./useCartBottomSheet";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import DeleteModal from "@/app/components/modals/DeleteModal";
 import ConfirmationModal from "@/app/components/modals/ConfirmationModal";
+
 
 // edit modal
 interface EditModalProps {
@@ -184,6 +185,7 @@ function CartItemRow({ item }: CartItemRowProps) {
 
 // CartBottomSheet
 export default function CartBottomSheet() {
+  useCartScrollLock();
   const {
     items,
     isOpen,
@@ -219,7 +221,9 @@ export default function CartBottomSheet() {
         show ? "opacity-100" : "opacity-0"
       }`}
       style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
-      onClick={handleBackdropClick}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
     >
       <div
         className={`w-full max-w-[430px] rounded-t-3xl bg-white flex flex-col transition-transform duration-250 ease-out ${
