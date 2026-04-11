@@ -7,6 +7,7 @@ import CategoryTabs from "@/app/components/Menu/CategoryTabs";
 import MenuItemCard from "@/app/components/Menu/MenuItemCard";
 import CartBottomSheet from "./components/Cart/cartBottomSheet";
 import CartFAB from "./components/Cart/CartFAB";
+import Link from "next/link";
 import {
   MENU_ITEMS,
   SPECIAL_OFFERS,
@@ -61,7 +62,6 @@ export default function HomePage() {
             Special Offers
           </h2>
 
-
           {SPECIAL_OFFERS.map((item) => (
             <div
               key={item.id}
@@ -79,11 +79,14 @@ export default function HomePage() {
             </div>
           ))}
 
-          <div className="shrink-0 flex items-center justify-center pl-2 pr-4">
+          <Link
+            href="/special-offers"
+            className="shrink-0 flex items-center justify-center pl-2 pr-4"
+          >
             <span className="text-gray-800 text-lg font-medium">--&gt;</span>
-          </div>
+          </Link>
         </div>
-      </section>
+      </section>  
 
       <hr className="mx-5 border-mooiste"/>
 
@@ -98,7 +101,7 @@ export default function HomePage() {
         {TODAY_PICKS.map((item) => (
           <div
             key={item.id}
-            className="shrink-0 w-[140px] flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden"
+            className="shrink-0 w-35 flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden"
           >
             <div className="flex items-center justify-center pt-5 px-4 pb-2 bg-gray-50">
               <Image

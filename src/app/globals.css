@@ -1,24 +1,106 @@
 @import "tailwindcss";
 
+/* ============================================================
+   CSS VARIABLES - Brand Colors
+   ============================================================ */
 :root {
-  --background: #f0f0f0;
-  --foreground: #171717;
+  --color-primary: #c8973a;
+  --color-primary-dark: #a87b2a;
+  --color-bg: #ffffff;
+  --color-surface: #faf8f5;
+  --color-surface-2: #f2ede6;
+  --color-text: #1a1a1a;
+  --color-text-secondary: #6b6b6b;
+  --color-border: #e8e2d9;
+  --color-rating: #f59e0b;
+  --color-danger: #ef4444;
+  --transition-speed: 300ms;
 }
 
+/* ============================================================
+   TAILWIND v4 THEME
+   ============================================================ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: "Poppins", sans-serif;
 }
 
+/* ============================================================
+   BASE
+   ============================================================ */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f0ebe3;
+  overscroll-behavior: none;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================================
+   PAGE TRANSITIONS
+   ============================================================ */
+.page-transition {
+  width: 100%;
+  min-height: 100vh;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slideInFromRight var(--transition-speed) ease-out forwards;
+}
+
+.slide-in-left {
+  animation: slideInFromLeft var(--transition-speed) ease-out forwards;
+}
+
+/* ============================================================
+   BOTTOM SHEET
+   ============================================================ */
 @keyframes slideUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes fadeIn {
@@ -26,24 +108,74 @@
   to { opacity: 1; }
 }
 
-.animate-slide-up {
-  animation: slideUp 0.3s ease-out;
+.bottom-sheet-enter {
+  animation: slideUp var(--transition-speed) ease-out forwards;
 }
 
-.animate-slide-in {
-  animation: slideIn 0.25s ease-out;
+.overlay-enter {
+  animation: fadeIn var(--transition-speed) ease-out forwards;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
+/* ============================================================
+   MODAL ANIMATIONS
+   ============================================================ */
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-html {
-  overflow-y: scroll;
+.modal-enter {
+  animation: modalScaleIn 220ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Poppins", sans-serif;
+.modal-overlay-enter {
+  animation: fadeIn 200ms ease-out forwards;
+}
+
+/* ============================================================
+   NOTIFICATION BELL PULSE
+   ============================================================ */
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+
+.badge-pulse {
+  animation: badgePulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   CUSTOM UTILITIES
+   ============================================================ */
+@utility text-primary {
+  color: var(--color-primary);
+}
+
+@utility bg-primary {
+  background-color: var(--color-primary);
+}
+
+@utility bg-surface {
+  background-color: var(--color-surface);
+}
+
+@utility bg-surface-2 {
+  background-color: var(--color-surface-2);
+}
+
+@utility border-mooiste {
+  border-color: var(--color-border);
+}
+
+@utility line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

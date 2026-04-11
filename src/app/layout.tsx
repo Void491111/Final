@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import InfoMejaModal from "./components/modals/InfoMejamodal";
+import PageTransition from "./components/PageTransition";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -24,8 +25,7 @@ export default function RootLayout({
       <body className={poppins.className}>
         {/* Mobile-first container: max-width like a phone, centered on desktop */}
         <div className="relative mx-auto min-h-screen w-full max-w-[430px] bg-white overflow-x-hidden">
-          {children}
-          {/* Global modals */}
+          <PageTransition>{children}</PageTransition>
           <InfoMejaModal />
         </div>
       </body>

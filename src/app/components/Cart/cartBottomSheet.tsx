@@ -40,7 +40,7 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
     >
       <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
       <div
-        className={`relative z-10 w-full max-w-[430px] rounded-t-3xl bg-white p-5 pb-8 transition-transform duration-200 ${
+        className={`relative z-10 w-full max-w-107.5 rounded-t-3xl bg-white p-5 pb-8 transition-transform duration-200 ${
           show ? "translate-y-0" : "translate-y-full"
         }`}
       >
@@ -194,7 +194,6 @@ export default function CartBottomSheet() {
     tax,
     total,
     totalItems,
-    handleBackdropClick,
   } = UseCartBottomSheet();
 
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -226,7 +225,7 @@ export default function CartBottomSheet() {
       }}
     >
       <div
-        className={`w-full max-w-[430px] rounded-t-3xl bg-white flex flex-col transition-transform duration-250 ease-out ${
+        className={`w-full max-w-107.5 rounded-t-3xl bg-white flex flex-col transition-transform duration-250 ease-out ${
           show ? "translate-y-0" : "translate-y-full"
         }`}
         style={{ maxHeight: "90vh" }}

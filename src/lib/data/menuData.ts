@@ -241,7 +241,7 @@ export const DUMMY_NOTIFICATIONS: Notification[] = Array.from(
         : i % 3 === 1
         ? "Buy 1 Get 1 semua minuman Coffee setiap Senin-Rabu. Yuk order sekarang!"
         : "Diskon 20% untuk semua dessert hari ini. Jangan sampai kehabisan!",
-    isRead: i > 3,
+    isRead: true,
     createdAt: new Date(Date.now() - i * 3600000).toISOString(),
   })
 );
