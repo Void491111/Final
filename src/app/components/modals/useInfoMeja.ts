@@ -25,7 +25,6 @@ export function useInfoMejaModal() {
             customerName,
             wifiPassword: WIFI_PASSWORD,
         });
-        closeInfo();
     }
 
     return {
