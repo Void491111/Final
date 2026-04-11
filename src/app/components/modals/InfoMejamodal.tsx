@@ -125,7 +125,7 @@ export default function InfoMejaModal() {
             }}          
             className="mt-5 w-full rounded-2xl bg-primary py-3 text-sm font-bold text-white active:scale-95 transition-transform"
           >
-
+            Tutup
           </button>
         </div>
       </div>

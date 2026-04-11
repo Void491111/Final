@@ -24,7 +24,7 @@ export default function ConfirmationModal({
 
   return (
     <div
-      className={`absolute inset-0 z-60 flex items-center justify-center px-6 transition-opacity duration-200 ${
+      className={`fixed inset-0 z-60 flex items-center justify-center px-6 transition-opacity duration-200 ${
         show ? "opacity-100" : "opacity-0"
       }`}
     >
