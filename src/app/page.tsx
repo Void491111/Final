@@ -8,6 +8,7 @@ import MenuItemCard from "@/app/components/Menu/MenuItemCard";
 import CartBottomSheet from "./components/Cart/cartBottomSheet";
 import CartFAB from "./components/Cart/CartFAB";
 import Link from "next/link";
+import { useCartStore } from "@/store";
 import {
   MENU_ITEMS,
   SPECIAL_OFFERS,
@@ -22,6 +23,17 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState<MenuCategory | "semua">(
     "semua"
   );
+  const addItem = useCartStore((s) => s.addItem);
+  const openCart = useCartStore((s) => s.openCart);
+
+  function handleTodayPicks(item: typeof MENU_ITEMS[0]) {
+    const defaultSweetness = 
+    item.category === "coffee" || item.category === "non-coffee"
+      ? "normal-sweet"
+      : "none";
+    addItem(item, defaultSweetness, "", 1);
+    openCart();
+  }
 
   const filteredMenu =
     activeCategory === "semua"
@@ -99,36 +111,36 @@ export default function HomePage() {
 
       <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4">
         {TODAY_PICKS.map((item) => (
-          <div
-            key={item.id}
-            className="shrink-0 w-35 flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden"
-          >
-            <div className="flex items-center justify-center pt-5 px-4 pb-2 bg-gray-50">
-              <Image
-                src={item.image}
-                alt={item.name}
-                width={80}
-                height={100}
-                className="object-contain drop-shadow-md"
-              />
-            </div>
-
-            <div className="px-3 pb-3 pt-2">
-              <p className="text-xs font-bold text-gray-900 leading-tight">
-                {item.name}
-              </p>
-              <p className="text-[10px] text-gray-500 leading-snug line-clamp-2 mt-1">
-                {item.description}
-              </p>
-              <p className="text-[10px] text-gray-600 mt-1">
-                mulai dari{" "}
-                <span className="text-[#C17C3F] font-bold">
-                  {formatCurrency(item.price)}
-                </span>
-              </p>
-            </div>
-          </div>
-        ))}
+            <button
+              key={item.id}
+              onClick={() => handleTodayPicks(item)}
+              className="shrink-0 w-35 flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden text-left active:scale-[0.97] transition-transform"
+            >
+              <div className="flex items-center justify-center pt-5 px-4 pb-2 bg-gray-50">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={80}
+                  height={100}
+                  className="object-contain drop-shadow-md"
+                />
+              </div>
+              <div className="px-3 pb-3 pt-2">
+                <p className="text-xs font-bold text-gray-900 leading-tight">
+                  {item.name}
+                </p>
+                <p className="text-[10px] text-gray-500 leading-snug line-clamp-2 mt-1">
+                  {item.description}
+                </p>
+                <p className="text-[10px] text-gray-600 mt-1">
+                  mulai dari{" "}
+                  <span className="text-[#C17C3F] font-bold">
+                    {formatCurrency(item.price)}
+                  </span>
+                </p>
+              </div>
+            </button>
+          ))}
       </div>
     </section>
 
