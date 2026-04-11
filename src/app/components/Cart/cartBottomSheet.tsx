@@ -6,10 +6,11 @@ import { CartItem, SWEETNESS_LABELS, SWEETNESS_OPTIONS, SweetnessLevel } from "@
 import { formatCurrency } from "@/lib/utils";
 import { UseCartBottomSheet } from "./useCartBottomSheet";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import DeleteModal from "@/app/components/modals/DeleteModal";
 import ConfirmationModal from "@/app/components/modals/ConfirmationModal";
 
-// edit nmodal
+// edit modal
 interface EditModalProps {
   item: CartItem;
   onSave: (sweetness: SweetnessLevel, note: string) => void;
@@ -27,8 +28,6 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
         <h3 className="mb-4 text-base font-bold text-gray-900">
           Edit — {item.menuItem.name}
         </h3>
-
-        {/* Sweetness */}
         <p className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
           Tingkat Manis
         </p>
@@ -47,8 +46,6 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
             </button>
           ))}
         </div>
-
-        {/* Note */}
         <p className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
           Catatan ke Koki (opsional)
         </p>
@@ -59,7 +56,6 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
           rows={4}
           className="mb-5 w-full resize-none rounded-2xl border border-mooiste bg-white p-3 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
         />
-
         <button
           onClick={() => { onSave(sweetness, note); onClose(); }}
           className="w-full rounded-2xl bg-primary py-3 text-sm font-bold text-white active:scale-95 transition-transform"
@@ -84,7 +80,6 @@ function CartItemRow({ item }: CartItemRowProps) {
   return (
     <>
       <div className="flex items-center gap-3 rounded-2xl border border-mooiste bg-surface p-3">
-        {/* Image */}
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-2">
           <Image
             src={item.menuItem.image}
@@ -94,8 +89,6 @@ function CartItemRow({ item }: CartItemRowProps) {
             sizes="64px"
           />
         </div>
-
-        {/* Content */}
         <div className="flex flex-1 flex-col gap-1 min-w-0">
           <span className="text-sm font-semibold text-gray-900 truncate">
             {item.menuItem.name}
@@ -103,9 +96,7 @@ function CartItemRow({ item }: CartItemRowProps) {
           <span className="text-sm font-bold text-primary">
             {formatCurrency(item.menuItem.price)}
           </span>
-
           <div className="flex items-center gap-2 flex-wrap">
-            {/* Quantity */}
             <div className="flex items-center gap-1 rounded-full border border-mooiste bg-white px-1">
               <button
                 onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
@@ -123,20 +114,14 @@ function CartItemRow({ item }: CartItemRowProps) {
                 <Plus size={12} strokeWidth={2.5} />
               </button>
             </div>
-
-            {/* Sweetness badge */}
             <span className="rounded-full border border-mooiste bg-white px-2 py-0.5 text-xs text-gray-600">
               {SWEETNESS_LABELS[item.sweetness]}
             </span>
           </div>
-
-          {/* Note preview */}
           {item.note && (
             <p className="text-[11px] text-gray-400 truncate">📝 {item.note}</p>
           )}
         </div>
-
-        {/* Edit + Delete */}
         <div className="flex gap-2 shrink-0">
           <button
             onClick={() => setShowEdit(true)}
@@ -155,18 +140,21 @@ function CartItemRow({ item }: CartItemRowProps) {
         </div>
       </div>
 
-      {showEdit && (
+      {/* PORTAL: render di luar DOM tree cart */}
+      {showEdit && createPortal(
         <EditModal
           item={item}
           onSave={(sw, n) => updateItem(item.cartItemId, sw, n)}
           onClose={() => setShowEdit(false)}
-        />
+        />,
+        document.body
       )}
-      {showDelete && (
+      {showDelete && createPortal(
         <DeleteModal
           onCancel={() => setShowDelete(false)}
           onConfirm={() => { removeItem(item.cartItemId); setShowDelete(false); }}
-        />
+        />,
+        document.body
       )}
     </>
   );
@@ -199,7 +187,6 @@ export default function CartBottomSheet() {
         className="bottom-sheet-enter w-full max-w-[430px] rounded-t-3xl bg-white flex flex-col"
         style={{ maxHeight: "90vh" }}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-mooiste shrink-0">
           <div className="flex items-center gap-2">
             <ShoppingCart size={20} className="text-gray-800" />
@@ -214,8 +201,6 @@ export default function CartBottomSheet() {
             <X size={16} />
           </button>
         </div>
-
-        {/* Items */}
         <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-gray-400">
@@ -228,8 +213,6 @@ export default function CartBottomSheet() {
             ))
           )}
         </div>
-
-        {/* Footer */}
         {items.length > 0 && (
           <div className="shrink-0 border-t border-mooiste bg-white px-5 py-4 pb-8">
             <div className="space-y-1.5 mb-4">
@@ -246,7 +229,6 @@ export default function CartBottomSheet() {
                 <span>{formatCurrency(total())}</span>
               </div>
             </div>
-
             <button
               onClick={() => setShowConfirmation(true)}
               className="w-full rounded-2xl bg-primary py-3.5 text-sm font-bold text-white active:scale-95 transition-transform shadow-md"
@@ -257,15 +239,16 @@ export default function CartBottomSheet() {
         )}
       </div>
 
-      {/* Confirmation Modal */}
-      {showConfirmation && (
+      {/* PORTAL: Confirmation Modal */}
+      {showConfirmation && createPortal(
         <ConfirmationModal
           onCancel={() => setShowConfirmation(false)}
           onConfirm={() => {
             setShowConfirmation(false);
             alert("Order placed! (coming soon)");
           }}
-        />
+        />,
+        document.body
       )}
     </div>
   );
