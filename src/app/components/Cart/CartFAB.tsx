@@ -1,23 +1,14 @@
 "use client";
-
+ 
 import { ShoppingCart } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useCartFAB } from "./useCartFAB";
-import { useEffect, useState } from "react";
-
+ 
 export default function CartFAB() {
   const { count, total, openCart } = useCartFAB();
-
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) return null;
-
+ 
   if (count === 0) return null;
-
+ 
   return (
     <button
       onClick={openCart}
@@ -37,3 +28,4 @@ export default function CartFAB() {
     </button>
   );
 }
+ 

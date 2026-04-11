@@ -10,7 +10,7 @@ export default function NotificationsPage() {
   const markRead = useNotificationStore((s) => s.markRead);
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 sticky top-0 bg-white z-10">
         <div className="flex items-center gap-2">
@@ -40,7 +40,6 @@ export default function NotificationsPage() {
             <p className="text-sm font-medium text-gray-900 leading-snug">
               {notif.message}
             </p>
-            <p className="text-xs text-gray-400 mt-1">Selengkapnya --&gt;</p>
           </div>
         ))}
       </div>

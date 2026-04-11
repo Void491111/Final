@@ -8,11 +8,8 @@ import { UseCartBottomSheet } from "./useCartBottomSheet";
 import { useState } from "react";
 import DeleteModal from "@/app/components/modals/DeleteModal";
 import ConfirmationModal from "@/app/components/modals/ConfirmationModal";
-import { useCartStore } from "@/store";
 
-// ============================================================
-// EDIT MODAL (sweetness + note)
-// ============================================================
+// edit nmodal
 interface EditModalProps {
   item: CartItem;
   onSave: (sweetness: SweetnessLevel, note: string) => void;
@@ -24,7 +21,7 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
   const [note, setNote] = useState(item.note);
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center animate-fade-in">
+    <div className="fixed inset-0 z-60 flex items-end justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative z-10 w-full max-w-[430px] rounded-t-3xl bg-white p-5 pb-8">
         <h3 className="mb-4 text-base font-bold text-gray-900">
@@ -65,7 +62,7 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
 
         <button
           onClick={() => { onSave(sweetness, note); onClose(); }}
-          className="w-full rounded-2xl bg-primary py-3 text-sm font-bold bg-[#1073BA] text-white active:scale-95 transition-transform"
+          className="w-full rounded-2xl bg-primary py-3 text-sm font-bold text-white active:scale-95 transition-transform"
         >
           Simpan
         </button>
@@ -74,15 +71,13 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
   );
 }
 
-// ============================================================
-// CART ITEM ROW
-// ============================================================
+// CartItemRow
 interface CartItemRowProps {
   item: CartItem;
 }
 
 function CartItemRow({ item }: CartItemRowProps) {
-  const { updateQuantity, removeItem, updateItem } = useCartStore();
+  const { updateQuantity, removeItem, updateItem } = UseCartBottomSheet();
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
@@ -177,9 +172,7 @@ function CartItemRow({ item }: CartItemRowProps) {
   );
 }
 
-// ============================================================
-// CART BOTTOM SHEET
-// ============================================================
+// CartBottomSheet
 export default function CartBottomSheet() {
   const {
     items,
@@ -256,7 +249,7 @@ export default function CartBottomSheet() {
 
             <button
               onClick={() => setShowConfirmation(true)}
-              className="w-full rounded-2xl bg-primary py-3.5 bg-[#1073BA] text-sm font-bold text-white active:scale-95 transition-transform shadow-md"
+              className="w-full rounded-2xl bg-primary py-3.5 text-sm font-bold text-white active:scale-95 transition-transform shadow-md"
             >
               Pesan Sekarang
             </button>
