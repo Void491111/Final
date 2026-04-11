@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/app/components/Navbar/Navbar";
 import CategoryTabs from "@/app/components/Menu/CategoryTabs";
 import MenuItemCard from "@/app/components/Menu/MenuItemCard";
@@ -13,7 +13,7 @@ import {
   MENU_ITEMS,
   SPECIAL_OFFERS,
   TODAY_PICKS,
-  HERO_IMAGE,
+  HERO_IMAGES,
 } from "@/lib/data/menuData";
 import { MenuCategory } from "@/types";
 import { formatCurrency } from "@/lib/utils";
@@ -26,11 +26,20 @@ export default function HomePage() {
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   function handleTodayPicks(item: typeof MENU_ITEMS[0]) {
-    const defaultSweetness = 
-    item.category === "coffee" || item.category === "non-coffee"
-      ? "normal-sweet"
-      : "none";
+    const defaultSweetness =
+      item.category === "coffee" || item.category === "non-coffee"
+        ? "normal-sweet"
+        : "none";
     addItem(item, defaultSweetness, "", 1);
     openCart();
   }
@@ -42,19 +51,23 @@ export default function HomePage() {
 
   return (
     <div className="relative flex flex-col bg-white min-h-screen pb-32">
-      {/* Navbar */}
       <Navbar />
 
-      {/* Hero Banner */}
+      {/* Hero Banner Carousel */}
       <div className="relative w-full aspect-video overflow-hidden">
-        <Image
-          src={HERO_IMAGE}
-          alt="De-Mooiste Cafe"
-          fill
-          className="object-cover"
-          priority
-          sizes="430px"
-        />
+        {HERO_IMAGES.map((src, i) => (
+          <Image
+            key={src}
+            src={src}
+            alt={`De-Mooiste Cafe ${i + 1}`}
+            fill
+            className={`object-cover transition-opacity duration-700 ${
+              i === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
+            priority={i === 0}
+            sizes="430px"
+          />
+        ))}
         <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent flex items-end p-5">
           <div>
             <p className="text-xs font-medium text-white/70 uppercase tracking-widest">
@@ -64,6 +77,16 @@ export default function HomePage() {
               Mooiste Cafe
             </h1>
           </div>
+        </div>
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+          {HERO_IMAGES.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === currentSlide ? "w-4 bg-white" : "w-1.5 bg-white/50"
+              }`}
+            />
+          ))}
         </div>
       </div>
 
@@ -98,19 +121,18 @@ export default function HomePage() {
             <span className="text-gray-800 text-lg font-medium">--&gt;</span>
           </Link>
         </div>
-      </section>  
+      </section>
 
-      <hr className="mx-5 border-mooiste"/>
+      <hr className="mx-5 border-mooiste" />
 
       {/* Today Picks */}
-      {/* Today Picks */}
-<section className="px-4 pt-6">
-  <h2 className="text-sm font-bold text-gray-900 text-center mb-5">
-    Today Picks
-  </h2>
+      <section className="px-4 pt-6">
+        <h2 className="text-sm font-bold text-gray-900 text-center mb-5">
+          Today Picks
+        </h2>
 
-      <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4">
-        {TODAY_PICKS.map((item) => (
+        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4">
+          {TODAY_PICKS.map((item) => (
             <button
               key={item.id}
               onClick={() => handleTodayPicks(item)}
@@ -141,10 +163,10 @@ export default function HomePage() {
               </div>
             </button>
           ))}
-      </div>
-    </section>
+        </div>
+      </section>
 
-      <hr className="mx-5 border-mooiste"/>
+      <hr className="mx-5 border-mooiste" />
 
       {/* Our Menu */}
       <section className="px-4 pt-8">
@@ -165,7 +187,6 @@ export default function HomePage() {
         </p>
       </section>
 
-      {/* Cart */}
       <CartFAB />
       <CartBottomSheet />
       <InfoMejaModal />

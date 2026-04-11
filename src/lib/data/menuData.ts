@@ -36,8 +36,11 @@ const DESSERT_IMAGES = [
   "/images/menuImages/biru.png",
 ];
 
-export const HERO_IMAGE =
-"/images/CarouselImages/carousel.png"
+export const HERO_IMAGES = [
+  "/images/CarouselImages/carousel.png",
+  "/images/CarouselImages/mesinkopi.png",
+  "/images/CarouselImages/spesial.png",
+]
 
 // ============================================================
 // MENU ITEMS
