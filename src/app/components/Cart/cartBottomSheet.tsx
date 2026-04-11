@@ -5,7 +5,7 @@ import { X, ShoppingCart, Minus, Plus, Trash2, Pencil } from "lucide-react";
 import { CartItem, SWEETNESS_LABELS, SWEETNESS_OPTIONS, SweetnessLevel } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { UseCartBottomSheet } from "./useCartBottomSheet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import DeleteModal from "@/app/components/modals/DeleteModal";
 import ConfirmationModal from "@/app/components/modals/ConfirmationModal";
@@ -20,11 +20,29 @@ interface EditModalProps {
 function EditModal({ item, onSave, onClose }: EditModalProps) {
   const [sweetness, setSweetness] = useState<SweetnessLevel>(item.sweetness);
   const [note, setNote] = useState(item.note);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    requestAnimationFrame(() => setShow(true));
+  }, []);
+
+  const handleClose = () => {
+    setShow(false);
+    setTimeout(onClose, 200);
+  };
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-[430px] rounded-t-3xl bg-white p-5 pb-8">
+    <div
+      className={`fixed inset-0 z-60 flex items-end justify-center transition-opacity duration-200 ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
+      <div
+        className={`relative z-10 w-full max-w-[430px] rounded-t-3xl bg-white p-5 pb-8 transition-transform duration-200 ${
+          show ? "translate-y-0" : "translate-y-full"
+        }`}
+      >
         <h3 className="mb-4 text-base font-bold text-gray-900">
           Edit — {item.menuItem.name}
         </h3>
@@ -57,7 +75,7 @@ function EditModal({ item, onSave, onClose }: EditModalProps) {
           className="mb-5 w-full resize-none rounded-2xl border border-mooiste bg-white p-3 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
         />
         <button
-          onClick={() => { onSave(sweetness, note); onClose(); }}
+          onClick={() => { onSave(sweetness, note); handleClose(); }}
           className="w-full rounded-2xl bg-primary py-3 text-sm font-bold text-white active:scale-95 transition-transform"
         >
           Simpan
@@ -98,27 +116,25 @@ function CartItemRow({ item }: CartItemRowProps) {
           </span>
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-1 rounded-full border border-mooiste bg-white px-1">
-              <button 
+              <button
                 onClick={() => {
                   if (item.quantity > 1) updateQuantity(item.cartItemId, item.quantity - 1);
-                }}              
-                disabled={item.quantity <=1}
+                }}
+                disabled={item.quantity <= 1}
                 className={`flex h-6 w-6 items-center justify-center rounded-full ${
-                    item.quantity <= 1 ? "text-gray-300" : "text-gray-700 active:scale-100"                   
-                  }`}
+                  item.quantity <= 1 ? "text-gray-300" : "text-gray-700 active:bg-gray-100"
+                }`}
               >
-                <Minus size={12} strokeWidth={2.5}/>
+                <Minus size={12} strokeWidth={2.5} />
               </button>
               <span className="w-5 text-center text-sm font-medium">
                 {item.quantity}
-                  
               </span>
               <button
                 onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                 className="flex h-6 w-6 items-center justify-center text-gray-700 active:bg-gray-100 rounded-full"
               >
                 <Plus size={12} strokeWidth={2.5} />
-
               </button>
             </div>
             <span className="rounded-full border border-mooiste bg-white px-2 py-0.5 text-xs text-gray-600">
@@ -147,7 +163,6 @@ function CartItemRow({ item }: CartItemRowProps) {
         </div>
       </div>
 
-      {/* PORTAL: render di luar DOM tree cart */}
       {showEdit && createPortal(
         <EditModal
           item={item}
@@ -181,17 +196,35 @@ export default function CartBottomSheet() {
   } = UseCartBottomSheet();
 
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [show, setShow] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      requestAnimationFrame(() => setShow(true));
+    } else {
+      requestAnimationFrame(() => setShow(false));
+    }
+  }, [isOpen]);
+
+  if (!isOpen && !show) return null;
+
+  function handleClose() {
+    setShow(false);
+    setTimeout(closeCart, 250);
+  }
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center overlay-enter"
+      className={`fixed inset-0 z-50 flex items-end justify-center transition-opacity duration-250 ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
       style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
       onClick={handleBackdropClick}
     >
       <div
-        className="bottom-sheet-enter w-full max-w-[430px] rounded-t-3xl bg-white flex flex-col"
+        className={`w-full max-w-[430px] rounded-t-3xl bg-white flex flex-col transition-transform duration-250 ease-out ${
+          show ? "translate-y-0" : "translate-y-full"
+        }`}
         style={{ maxHeight: "90vh" }}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-mooiste shrink-0">
@@ -202,7 +235,7 @@ export default function CartBottomSheet() {
             </span>
           </div>
           <button
-            onClick={closeCart}
+            onClick={handleClose}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2"
           >
             <X size={16} />
@@ -246,7 +279,6 @@ export default function CartBottomSheet() {
         )}
       </div>
 
-      {/* PORTAL: Confirmation Modal */}
       {showConfirmation && createPortal(
         <ConfirmationModal
           onCancel={() => setShowConfirmation(false)}
