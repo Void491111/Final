@@ -98,20 +98,27 @@ function CartItemRow({ item }: CartItemRowProps) {
           </span>
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-1 rounded-full border border-mooiste bg-white px-1">
-              <button
-                onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-                className="flex h-6 w-6 items-center justify-center text-gray-700 active:bg-gray-100 rounded-full"
+              <button 
+                onClick={() => {
+                  if (item.quantity > 1) updateQuantity(item.cartItemId, item.quantity - 1);
+                }}              
+                disabled={item.quantity <=1}
+                className={`flex h-6 w-6 items-center justify-center rounded-full ${
+                    item.quantity <= 1 ? "text-gray-300" : "text-gray-700 active:scale-100"                   
+                  }`}
               >
-                <Minus size={12} strokeWidth={2.5} />
+                <Minus size={12} strokeWidth={2.5}/>
               </button>
               <span className="w-5 text-center text-sm font-medium">
                 {item.quantity}
+                  
               </span>
               <button
                 onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                 className="flex h-6 w-6 items-center justify-center text-gray-700 active:bg-gray-100 rounded-full"
               >
                 <Plus size={12} strokeWidth={2.5} />
+
               </button>
             </div>
             <span className="rounded-full border border-mooiste bg-white px-2 py-0.5 text-xs text-gray-600">
