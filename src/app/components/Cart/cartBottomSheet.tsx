@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { X, ShoppingCart, Minus, Plus, Trash2, Pencil } from "lucide-react";
+import { X, ShoppingCart, Minus, Plus, Trash2, Pencil, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { CartItem, SWEETNESS_LABELS, SWEETNESS_OPTIONS, SweetnessLevel } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { UseCartBottomSheet, useCartScrollLock } from "./useCartBottomSheet";
@@ -194,6 +194,11 @@ export default function CartBottomSheet() {
     tax,
     total,
     totalItems,
+    handleCheckout,
+    isSubmitting,
+    orderError,
+    orderSuccess,
+    resetOrderState,
   } = UseCartBottomSheet();
 
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -207,10 +212,22 @@ export default function CartBottomSheet() {
     }
   }, [isOpen]);
 
+  // Auto close cart after successful order
+  useEffect(() => {
+    if (orderSuccess) {
+      const timer = setTimeout(() => {
+        resetOrderState();
+        closeCart();
+      }, 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [orderSuccess, resetOrderState, closeCart]);
+
   if (!isOpen && !show) return null;
 
   function handleClose() {
     setShow(false);
+    resetOrderState();
     setTimeout(closeCart, 250);
   }
 
@@ -244,50 +261,83 @@ export default function CartBottomSheet() {
             <X size={16} />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
-          {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-              <ShoppingCart size={40} className="mb-3 opacity-30" />
-              <p className="text-sm">Keranjang masih kosong</p>
+
+        {/* Success State */}
+        {orderSuccess ? (
+          <div className="flex flex-col items-center justify-center py-16 px-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 mb-4">
+              <CheckCircle size={32} className="text-green-500" />
             </div>
-          ) : (
-            items.map((item) => (
-              <CartItemRow key={item.cartItemId} item={item} />
-            ))
-          )}
-        </div>
-        {items.length > 0 && (
-          <div className="shrink-0 border-t border-mooiste bg-white px-5 py-4 pb-8">
-            <div className="space-y-1.5 mb-4">
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>Subtotal</span>
-                <span>{formatCurrency(subtotal())}</span>
-              </div>
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>Pajak (11%)</span>
-                <span>{formatCurrency(tax())}</span>
-              </div>
-              <div className="flex justify-between text-base font-bold text-gray-900 pt-1 border-t border-mooiste">
-                <span>Total</span>
-                <span>{formatCurrency(total())}</span>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowConfirmation(true)}
-              className="w-full rounded-2xl bg-primary py-3.5 text-sm font-bold text-white active:scale-95 transition-transform shadow-md"
-            >
-              Pesan Sekarang
-            </button>
+            <h3 className="text-lg font-bold text-gray-900 mb-1">Pesanan Berhasil!</h3>
+            <p className="text-sm text-gray-500 text-center">
+              Pesanan kamu sedang diproses. Silahkan tunggu ya!
+            </p>
           </div>
+        ) : (
+          <>
+            {/* Error Banner */}
+            {orderError && (
+              <div className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 px-4 py-3">
+                <AlertCircle size={16} className="text-red-500 shrink-0" />
+                <p className="text-sm text-red-600">{orderError}</p>
+              </div>
+            )}
+
+            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+              {items.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+                  <ShoppingCart size={40} className="mb-3 opacity-30" />
+                  <p className="text-sm">Keranjang masih kosong</p>
+                </div>
+              ) : (
+                items.map((item) => (
+                  <CartItemRow key={item.cartItemId} item={item} />
+                ))
+              )}
+            </div>
+
+            {items.length > 0 && (
+              <div className="shrink-0 border-t border-mooiste bg-white px-5 py-4 pb-8">
+                <div className="space-y-1.5 mb-4">
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>Subtotal</span>
+                    <span>{formatCurrency(subtotal())}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>Pajak (11%)</span>
+                    <span>{formatCurrency(tax())}</span>
+                  </div>
+                  <div className="flex justify-between text-base font-bold text-gray-900 pt-1 border-t border-mooiste">
+                    <span>Total</span>
+                    <span>{formatCurrency(total())}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowConfirmation(true)}
+                  disabled={isSubmitting}
+                  className="w-full rounded-2xl bg-primary py-3.5 text-sm font-bold text-white active:scale-95 transition-transform shadow-md disabled:opacity-50 disabled:active:scale-100"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 size={16} className="animate-spin" />
+                      Memproses...
+                    </span>
+                  ) : (
+                    "Pesan Sekarang"
+                  )}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
       {showConfirmation && createPortal(
         <ConfirmationModal
           onCancel={() => setShowConfirmation(false)}
-          onConfirm={() => {
+          onConfirm={async () => {
             setShowConfirmation(false);
-            alert("Order placed! (coming soon)");
+            await handleCheckout();
           }}
         />,
         document.body
