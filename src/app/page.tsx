@@ -9,13 +9,9 @@ import CartBottomSheet from "./components/Cart/cartBottomSheet";
 import CartFAB from "./components/Cart/CartFAB";
 import Link from "next/link";
 import { useCartStore } from "@/store";
-import {
-  MENU_ITEMS,
-  SPECIAL_OFFERS,
-  TODAY_PICKS,
-  HERO_IMAGES,
-} from "@/lib/data/menuData";
-import { MenuCategory } from "@/types";
+import { fetchMenu, fetchSpecialOffers, fetchTodayPicks } from "@/lib/api";
+import { HERO_IMAGES } from "@/lib/data/menuData";
+import { MenuItem, MenuCategory } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import InfoMejaModal from "./components/modals/InfoMejamodal";
 
@@ -28,6 +24,34 @@ export default function HomePage() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Data state
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [specialOffers, setSpecialOffers] = useState<MenuItem[]>([]);
+  const [todayPicks, setTodayPicks] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch data from API
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [menu, offers, picks] = await Promise.all([
+          fetchMenu(),
+          fetchSpecialOffers(),
+          fetchTodayPicks(),
+        ]);
+        setMenuItems(menu);
+        setSpecialOffers(offers);
+        setTodayPicks(picks);
+      } catch (err) {
+        console.error("Failed to fetch menu data:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  // Hero carousel timer
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_IMAGES.length);
@@ -35,7 +59,7 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, []);
 
-  function handleTodayPicks(item: typeof MENU_ITEMS[0]) {
+  function handleTodayPicks(item: MenuItem) {
     const defaultSweetness =
       item.category === "coffee" || item.category === "non-coffee"
         ? "normal-sweet"
@@ -46,8 +70,8 @@ export default function HomePage() {
 
   const filteredMenu =
     activeCategory === "semua"
-      ? MENU_ITEMS
-      : MENU_ITEMS.filter((item) => item.category === activeCategory);
+      ? menuItems
+      : menuItems.filter((item) => item.category === activeCategory);
 
   return (
     <div className="relative flex flex-col bg-white min-h-screen pb-32">
@@ -97,22 +121,26 @@ export default function HomePage() {
             Special Offers
           </h2>
 
-          {SPECIAL_OFFERS.map((item) => (
-            <div
-              key={item.id}
-              className="shrink-0 flex items-center justify-center"
-            >
-              <div className="relative h-20 w-16">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-contain drop-shadow-md"
-                  sizes="64px"
-                />
+          {loading ? (
+            <p className="text-sm text-gray-400">Loading...</p>
+          ) : (
+            specialOffers.map((item) => (
+              <div
+                key={item.id}
+                className="shrink-0 flex items-center justify-center"
+              >
+                <div className="relative h-20 w-16">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    className="object-contain drop-shadow-md"
+                    sizes="64px"
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
 
           <Link
             href="/special-offers"
@@ -132,37 +160,41 @@ export default function HomePage() {
         </h2>
 
         <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4">
-          {TODAY_PICKS.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleTodayPicks(item)}
-              className="shrink-0 w-35 flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden text-left active:scale-[0.97] transition-transform"
-            >
-              <div className="flex items-center justify-center pt-5 px-4 pb-2 bg-gray-50">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  width={80}
-                  height={100}
-                  className="object-contain drop-shadow-md"
-                />
-              </div>
-              <div className="px-3 pb-3 pt-2">
-                <p className="text-xs font-bold text-gray-900 leading-tight">
-                  {item.name}
-                </p>
-                <p className="text-[10px] text-gray-500 leading-snug line-clamp-2 mt-1">
-                  {item.description}
-                </p>
-                <p className="text-[10px] text-gray-600 mt-1">
-                  mulai dari{" "}
-                  <span className="text-[#C17C3F] font-bold">
-                    {formatCurrency(item.price)}
-                  </span>
-                </p>
-              </div>
-            </button>
-          ))}
+          {loading ? (
+            <p className="text-sm text-gray-400 mx-auto">Loading...</p>
+          ) : (
+            todayPicks.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleTodayPicks(item)}
+                className="shrink-0 w-35 flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden text-left active:scale-[0.97] transition-transform"
+              >
+                <div className="flex items-center justify-center pt-5 px-4 pb-2 bg-gray-50">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={80}
+                    height={100}
+                    className="object-contain drop-shadow-md"
+                  />
+                </div>
+                <div className="px-3 pb-3 pt-2">
+                  <p className="text-xs font-bold text-gray-900 leading-tight">
+                    {item.name}
+                  </p>
+                  <p className="text-[10px] text-gray-500 leading-snug line-clamp-2 mt-1">
+                    {item.description}
+                  </p>
+                  <p className="text-[10px] text-gray-600 mt-1">
+                    mulai dari{" "}
+                    <span className="text-[#C17C3F] font-bold">
+                      {formatCurrency(item.price)}
+                    </span>
+                  </p>
+                </div>
+              </button>
+            ))
+          )}
         </div>
       </section>
 
@@ -177,14 +209,20 @@ export default function HomePage() {
         <CategoryTabs active={activeCategory} onChange={setActiveCategory} />
 
         <div className="mt-5 space-y-4">
-          {filteredMenu.map((item) => (
-            <MenuItemCard key={item.id} item={item} />
-          ))}
+          {loading ? (
+            <p className="text-sm text-gray-400 text-center">Loading menu...</p>
+          ) : (
+            filteredMenu.map((item) => (
+              <MenuItemCard key={item.id} item={item} />
+            ))
+          )}
         </div>
 
-        <p className="mt-8 text-center text-xs text-gray-500">
-          Yeay, kamu sudah melihat semua menu kami! 🎉
-        </p>
+        {!loading && (
+          <p className="mt-8 text-center text-xs text-gray-500">
+            Yeay, kamu sudah melihat semua menu kami! 🎉
+          </p>
+        )}
       </section>
 
       <CartFAB />

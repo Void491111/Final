@@ -22,7 +22,11 @@ function transformMenuItem(item: ApiMenuItem): MenuItem {
     name: item.name,
     description: item.description,
     price: item.price,
-    image: item.image,
+    image: item.image && item.image.startsWith("/images") 
+  ? item.image 
+  : item.image 
+    ? `http://localhost:8000/storage/${item.image.replace(/^\//, '')}` 
+    : "/images/placeholder.png",
     category: item.category?.slug as MenuCategory,
     rating: parseFloat(item.rating),
     isSpecialOffer: Boolean(item.is_special_offer),

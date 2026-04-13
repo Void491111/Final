@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { SPECIAL_OFFERS } from "@/lib/data/menuData";
+import { fetchSpecialOffers } from "@/lib/api";
+import { MenuItem } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/store";
 import CartBottomSheet from "@/app/components/Cart/cartBottomSheet";
@@ -14,7 +16,24 @@ export default function SpecialOffersPage() {
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
 
-  function handleTap(item: (typeof SPECIAL_OFFERS)[0]) {
+  const [specialOffers, setSpecialOffers] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const data = await fetchSpecialOffers();
+        setSpecialOffers(data);
+      } catch (err) {
+        console.error("Failed to fetch special offers:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  function handleTap(item: MenuItem) {
     const defaultSweetness =
       item.category === "coffee" || item.category === "non-coffee"
         ? "normal-sweet"
@@ -36,37 +55,43 @@ export default function SpecialOffersPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 px-4 pt-5">
-        {SPECIAL_OFFERS.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => handleTap(item)}
-            className="flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden text-left active:scale-[0.97] transition-transform"
-          >
-            <div className="flex items-center justify-center pt-5 px-4 pb-2 bg-gray-50">
-              <Image
-                src={item.image}
-                alt={item.name}
-                width={80}
-                height={100}
-                className="object-contain drop-shadow-md"
-              />
-            </div>
-            <div className="px-3 pb-3 pt-2">
-              <p className="text-xs font-bold text-gray-900 leading-tight">
-                {item.name}
-              </p>
-              <p className="text-[10px] text-gray-500 leading-snug line-clamp-2 mt-1">
-                {item.description}
-              </p>
-              <p className="text-[10px] text-gray-600 mt-1">
-                mulai dari{" "}
-                <span className="text-[#C17C3F] font-bold">
-                  {formatCurrency(item.price)}
-                </span>
-              </p>
-            </div>
-          </button>
-        ))}
+        {loading ? (
+          <p className="col-span-2 text-sm text-gray-400 text-center py-10">
+            Loading...
+          </p>
+        ) : (
+          specialOffers.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => handleTap(item)}
+              className="flex flex-col rounded-sm border border-gray-200 bg-white shadow-sm overflow-hidden text-left active:scale-[0.97] transition-transform"
+            >
+              <div className="flex items-center justify-center pt-5 px-4 pb-2 bg-gray-50">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={80}
+                  height={100}
+                  className="object-contain drop-shadow-md"
+                />
+              </div>
+              <div className="px-3 pb-3 pt-2">
+                <p className="text-xs font-bold text-gray-900 leading-tight">
+                  {item.name}
+                </p>
+                <p className="text-[10px] text-gray-500 leading-snug line-clamp-2 mt-1">
+                  {item.description}
+                </p>
+                <p className="text-[10px] text-gray-600 mt-1">
+                  mulai dari{" "}
+                  <span className="text-[#C17C3F] font-bold">
+                    {formatCurrency(item.price)}
+                  </span>
+                </p>
+              </div>
+            </button>
+          ))
+        )}
       </div>
 
       <CartFAB />
